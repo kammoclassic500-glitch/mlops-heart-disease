@@ -75,13 +75,3 @@ jobs:
       - name: Build Docker image
         run: docker build -t heart-disease-api:${{ github.sha }} .
 
-<<<<<<< HEAD
-  
-=======
-      # To push to a registry, uncomment and add DOCKERHUB_USERNAME / DOCKERHUB_TOKEN
-      # (or GHCR_TOKEN) as repository secrets, then add a docker/login-action step above.
-      # - name: Push image
-      #   run: |
-      #     docker tag heart-disease-api:${{ github.sha }} <your-registry>/heart-disease-api:latest
-      #     docker push <your-registry>/heart-disease-api:latest
->>>>>>> be2cf2e (Apply corrected CI step order)
