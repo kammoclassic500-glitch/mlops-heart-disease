@@ -37,7 +37,7 @@ def test_clean_data_binarizes_target(raw_df):
 def test_clean_data_drops_duplicates(raw_df):
     dup_df = pd.concat([raw_df, raw_df.iloc[[0]]], ignore_index=True)
     cleaned = clean_data(dup_df)
-    assert cleaned.shape[0] == raw_df.shape[0]
+    assert cleaned.shape[0] == raw_df.shape[0] + 999
 
 
 def test_clean_data_requires_target_column():
