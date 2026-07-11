@@ -16,20 +16,10 @@ spec:
     spec:
       containers:
         - name: heart-disease-api
-          # For Minikube: run `eval $(minikube docker-env)` then `docker build`
-          # so this image tag is available inside the cluster, or push to a
-          # registry and reference it here (e.g. yourdockerhubuser/heart-disease-api:latest)
           image: heart-disease-api:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never   # use the image already loaded into Minikube's Docker daemon
           ports:
             - containerPort: 8000
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
           readinessProbe:
             httpGet:
               path: /health
@@ -41,4 +31,11 @@ spec:
               path: /health
               port: 8000
             initialDelaySeconds: 10
-            periodSeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
