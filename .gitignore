@@ -1,0 +1,10 @@
+.venv/
+.venv_test/
+__pycache__/
+*.pyc
+mlruns/
+mlflow.db
+reports/
+*.log
+data/heart_disease_raw.csv
+models/*.joblib

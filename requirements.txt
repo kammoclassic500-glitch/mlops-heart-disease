@@ -1,0 +1,14 @@
+pandas==2.3.3
+numpy==2.4.4
+scikit-learn==1.8.0
+matplotlib==3.10.8
+seaborn==0.13.2
+mlflow==3.14.0
+joblib==1.5.3
+fastapi==0.139.0
+uvicorn==0.51.0
+pydantic==2.13.4
+prometheus-client==0.25.0
+ucimlrepo==0.0.7
+pytest==9.1.1
+httpx==0.28.1

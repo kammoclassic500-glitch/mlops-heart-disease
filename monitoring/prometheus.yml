@@ -1,0 +1,22 @@
+# Task 8: Monitoring & Logging
+# Point a local Prometheus instance at this config to scrape the API's
+# /metrics endpoint (exposed via prometheus_client in api/main.py).
+#
+# Run locally with Docker:
+#   docker run -p 9090:9090 -v $(pwd)/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+#
+# Then open http://localhost:9090 and query e.g. predict_requests_total
+# or predict_latency_seconds_bucket. Point Grafana at this Prometheus
+# instance as a data source to build a simple request-count/latency dashboard.
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "heart-disease-api"
+    static_configs:
+      # If the API runs via `docker run -p 8000:8000 ...` on the same host as
+      # Prometheus, use host.docker.internal (Docker Desktop) or the
+      # container's service name if both run in the same Docker network /
+      # Kubernetes namespace (e.g. heart-disease-api-service).
+      - targets: ["host.docker.internal:8000"]
