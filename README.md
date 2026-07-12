@@ -1,6 +1,6 @@
 # Heart Disease Risk Prediction — MLOps Assignment (AIMLCZG523)
 
-This repo is a working scaffold for every task in the assignment (50 marks total).
+This repo is a working scaffold for every task in the assignment.
 Every script in here has been run and tested — training produces a real model,
 the API returns real predictions, and `pytest`/`flake8` both pass. What's left
 for you is the parts that need *your* machine/cloud account: Docker build,
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ---
 
-## Task 1 — Data Acquisition & EDA (5 marks)
+## Data Acquisition & EDA
 
 ```bash
 python data/download_data.py     # pulls the official UCI dataset (id=45) -> data/heart_disease_raw.csv
@@ -36,7 +36,7 @@ This produces, under `reports/eda/`:
 
 ---
 
-## Task 2 — Feature Engineering & Model Development (8 marks)
+## Feature Engineering & Model Development
 
 `src/preprocessing.py` defines the reusable cleaning + feature pipeline (median/most-frequent imputation, scaling, one-hot encoding). `src/train.py` trains **two models** — Logistic Regression and Random Forest — each with a small hyperparameter grid, using 5-fold stratified cross-validation.
 
@@ -53,7 +53,7 @@ This prints cross-validated and held-out test metrics (accuracy, precision, reca
 
 ---
 
-## Task 3 — Experiment Tracking (5 marks)
+## Experiment Tracking
 
 MLflow logging is already wired into `src/train.py` (params, metrics, ROC curve plot, and the model itself as an artifact) — it runs automatically as part of the training step above.
 
@@ -70,7 +70,7 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 ---
 
-## Task 4 — Model Packaging & Reproducibility (7 marks)
+## Model Packaging & Reproducibility
 
 Already handled:
 - `models/heart_disease_model.joblib` — the fitted preprocessing pipeline **and** model bundled as one object (loading it is enough to predict on raw JSON — no separate transformer needed)
@@ -83,7 +83,7 @@ Already handled:
 
 ---
 
-## Task 5 — CI/CD Pipeline & Automated Testing (8 marks)
+## CI/CD Pipeline & Automated Testing
 
 Unit tests live in `tests/` (8 tests: 4 for preprocessing, 4 for the API), and the pipeline is defined in `.github/workflows/ci.yml`. It:
 1. Lints with `flake8`
@@ -105,7 +105,7 @@ pytest tests/ -v
 
 ---
 
-## Task 6 — Model Containerization (5 marks)
+## Model Containerization
 
 ```bash
 docker build -t heart-disease-api:latest .
@@ -126,7 +126,7 @@ Expected response shape: `{"prediction": 0 or 1, "label": "...", "confidence": 0
 
 ---
 
-## Task 7 — Production Deployment (7 marks)
+## Production Deployment
 
 Manifests are in `k8s/`. With Minikube or Docker Desktop Kubernetes:
 
@@ -151,7 +151,7 @@ Test the returned URL the same way as the curl command above.
 
 ---
 
-## Task 8 — Monitoring & Logging (3 marks)
+## Monitoring & Logging
 
 - Every API request is logged to `api_requests.log` (see `api/main.py`) — input, prediction, and confidence, with timestamps.
 - A Prometheus-compatible `/metrics` endpoint exposes `predict_requests_total` and `predict_latency_seconds`.
@@ -171,14 +171,14 @@ Optionally point Grafana at that Prometheus instance and build a 1-panel dashboa
 
 ---
 
-## Task 9 — Documentation & Reporting (2 marks)
+## Documentation & Reporting
 
 Your final report (10 pages, doc/docx/pdf) should include:
 - Setup/install instructions (can largely reuse this README)
-- EDA and modelling choices (from Tasks 1–2)
-- Experiment tracking summary (from Task 3 screenshots)
+- EDA and modelling choices
+- Experiment tracking summary
 - An architecture diagram (data → preprocessing → model → FastAPI → Docker → Kubernetes → monitoring) — a simple boxes-and-arrows diagram is enough
-- CI/CD and deployment workflow screenshots (from Tasks 5–7)
+- CI/CD and deployment workflow screenshots
 - Link to your GitHub repository
 
 **This is the part you still need to personalize** — I can't generate your GitHub URL, your screenshots, or your demo video for you, but I'm happy to help you draft the report text itself, or build the architecture diagram, once you've got your repo set up and have run through the tasks above.
@@ -196,20 +196,16 @@ Your final report (10 pages, doc/docx/pdf) should include:
 
 ```
 mlops-heart-disease/
-├── data/download_data.py       # Task 1
-├── src/eda.py                  # Task 1
-├── src/preprocessing.py        # Task 2, 4
-├── src/train.py                # Task 2, 3, 4
-├── api/main.py                 # Task 6, 8
-├── tests/                      # Task 5
-├── .github/workflows/ci.yml    # Task 5
-├── Dockerfile, .dockerignore   # Task 6
-├── k8s/deployment.yaml, service.yaml   # Task 7
-├── monitoring/prometheus.yml   # Task 8
+├── data/download_data.py       # Data Acquisition
+├── src/eda.py                  # EDA
+├── src/preprocessing.py        # Feature Engineering, Packaging
+├── src/train.py                # Model Development, Experiment Tracking, Packaging
+├── api/main.py                 # Containerization, Monitoring
+├── tests/                      # CI/CD
+├── .github/workflows/ci.yml    # CI/CD
+├── Dockerfile, .dockerignore   # Containerization
+├── k8s/deployment.yaml, service.yaml   # Production Deployment
+├── monitoring/prometheus.yml   # Monitoring
 ├── requirements.txt
 └── README.md                   # this file
 ```
-
-## A note on academic integrity
-
-The assignment explicitly warns against copying implementations. This scaffold gives you working infrastructure, but the things that make a submission *yours* — the EDA commentary, the model-choice reasoning, the architecture diagram, the monitoring setup, and the report narrative — are worth doing in your own words. I'd recommend changing at least: variable/feature engineering choices you explain differently, your own hyperparameter grid, and definitely your own screenshots/report writing.

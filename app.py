@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from prometheus_client import Counter
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # ---------------------------------------------------------------------------
 # Logging setup (Task 8 will build on this — keep the format simple/parseable)
@@ -43,6 +45,19 @@ app = FastAPI(
 )
 
 model = None
+
+# ---------------------------------------------------------------------------
+# Prometheus metrics
+# ---------------------------------------------------------------------------
+# Auto-instruments: request counts, latencies, status codes -> exposed at /metrics
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
+
+# Custom counter: track prediction outcomes by risk label
+PREDICTION_COUNTER = Counter(
+    "heart_disease_predictions_total",
+    "Total number of predictions served, by risk label",
+    ["risk_label"],
+)
 
 
 @app.on_event("startup")
@@ -109,6 +124,7 @@ def predict(features: PatientFeatures):
             confidence = 1.0
 
         risk_label = "High Risk" if pred == 1 else "Low Risk"
+        PREDICTION_COUNTER.labels(risk_label=risk_label).inc()
 
         logger.info(
             f"Prediction served | input={features.dict()} | "
